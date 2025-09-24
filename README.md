@@ -34,87 +34,62 @@ STEP-5: Combine all these groups to get the complete cipher text.
 ```
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
-// Hill cipher key matrix and its inverse
-int keymat[3][3] = { { 1, 2, 1 }, { 2, 3, 2 }, { 2, 2, 1 } };
-int invkeymat[3][3] = { { -1, 0, 1 }, { 2, -1, 0 }, { -2, 2, -1 } };
-// Key array for mapping
-char key[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-// Encode function
-void encode(char a, char b, char c, char *ret) {
-    int x, y, z;
-    int posa = (int) a - 65;
-    int posb = (int) b - 65;
-    int posc = (int) c - 65;
-    x = posa * keymat[0][0] + posb * keymat[1][0] + posc * keymat[2][0];
-    y = posa * keymat[0][1] + posb * keymat[1][1] + posc * keymat[2][1];
-    z = posa * keymat[0][2] + posb * keymat[1][2] + posc * keymat[2][2];
-    ret[0] = key[x % 26];
-    ret[1] = key[y % 26];
-    ret[2] = key[z % 26];
-    ret[3] = '\0';
+int main()
+{
+unsigned int a[3][3] = {{6, 24, 1}, {13, 16, 10}, {20, 17, 15}}; 
+unsigned int b[3][3] = {{8, 5, 10}, {21, 8, 21}, {21, 12, 8}}; 
+int i, j, t = 0;
+unsigned int c[3], d[3];
+char msg[4];
+printf("Enter plain text (3 letters): ");
+scanf("%3s", msg);
+if (strlen(msg) != 3)
+{
+printf("Error: The plain text must be exactly 3 letters.\n"); return 1;
 }
-// Decode function
-void decode(char a, char b, char c, char *ret) {
-    int x, y, z;
-    int posa = (int) a - 65;
-    int posb = (int) b - 65;
-    int posc = (int) c - 65;
-    x = posa * invkeymat[0][0] + posb * invkeymat[1][0] + posc * invkeymat[2][0];
-    y = posa * invkeymat[0][1] + posb * invkeymat[1][1] + posc * invkeymat[2][1];
-    z = posa * invkeymat[0][2] + posb * invkeymat[1][2] + posc * invkeymat[2][2];
-    ret[0] = key[(x % 26 < 0) ? (26 + x % 26) : (x % 26)];
-    ret[1] = key[(y % 26 < 0) ? (26 + y % 26) : (y % 26)];
-    ret[2] = key[(z % 26 < 0) ? (26 + z % 26) : (z % 26)];
-    ret[3] = '\0';
+// Convert plain text to numerical values (A=0, B=1, ..., Z=25)
+for (i = 0; i < 3; i++)
+{
+c[i] = msg[i] - 'A';
+printf("%d ", c[i]); 
 }
-int main() {
-    char msg[1000];
-    char enc[1000] = "";
-    char dec[1000] = "";
-    int n;
-    strcpy(msg, "SRILAKSHMI");
-    printf("Simulation of Hill Cipher\n");
-    printf("Input message : %s\n", msg);
-    // Convert message to uppercase
-    for (int i = 0; i < strlen(msg); i++) {
-        msg[i] = toupper(msg[i]);
-    }
-    // Remove spaces (if needed)
-    n = strlen(msg) % 3;
-    // Append padding text 'X' if needed
-    if (n != 0) {
-        for (int i = 1; i <= (3 - n); i++) {
-            strcat(msg, "X");
-        }
-    }
-    printf("Padded message : %s\n", msg);
-    // Encoding
-    for (int i = 0; i < strlen(msg); i += 3) {
-        char a = msg[i];
-        char b = msg[i + 1];
-        char c = msg[i + 2];
-        char ret[4];
-        encode(a, b, c, ret);
-        strcat(enc, ret);
-    }
-    printf("Encoded message : %s\n", enc);
-    // Decoding
-    for (int i = 0; i < strlen(enc); i += 3) {
-        char a = enc[i];
-        char b = enc[i + 1];
-        char c = enc[i + 2];
-        char ret[4];
-        decode(a, b, c, ret);
-        strcat(dec, ret);
-    }
-    printf("Decoded message : %s\n", dec);
-    return 0;
+for (i = 0; i < 3; i++)
+{
+t = 0;
+for (j = 0; j < 3; j++)
+{
+t+= a[i][j] * c[j];
+}
+d[i] = t % 26; 
+}
+printf("\nEncrypted Cipher Text: ");
+for (i = 0; i < 3; i++)
+{
+printf("%c", d[i] + 'A');
+}
+for (i = 0; i < 3; i++)
+{
+t = 0;
+}
+for (j = 0; j < 3; j++)
+{
+t += b[i][j] * d[j];
+c[i] = t % 26;
+}
+printf("\nDecrypted Cipher Text:");
+for (i = 0; i < 3; i++)
+{
+printf("%c", c[i] + 'A');
+}
+getchar();
+return 0; 
+
 }
 ```
 ## OUTPUT
 
-<img width="486" height="205" alt="Screenshot 2025-09-03 at 2 53 05 PM" src="https://github.com/user-attachments/assets/9efb43cf-c479-408f-ad11-02ba17ff5cee" />
+<img width="745" height="493" alt="3" src="https://github.com/user-attachments/assets/dd135fec-12d9-4d32-ad1f-55b3635e44dc" />
+
 
 ## RESULT
 The Program is Successfully Completed.
